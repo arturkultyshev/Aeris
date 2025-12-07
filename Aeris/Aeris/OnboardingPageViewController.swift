@@ -84,10 +84,9 @@ class OnboardingPageViewController: UIPageViewController {
 
     func finishOnboarding() {
         // Переход в основной экран (пример с модальным переходом)
-        let sb = UIStoryboard(name: "Main", bundle: nil)
-        let mainVC = sb.instantiateViewController(withIdentifier: "MainViewController")
-        mainVC.modalPresentationStyle = .fullScreen
-        self.present(mainVC, animated: true, completion: nil)
+        let tabBar = MainTabBarController()
+        tabBar.modalPresentationStyle = .fullScreen
+        present(tabBar, animated: true, completion: nil)
     }
 }
 
