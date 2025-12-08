@@ -34,16 +34,16 @@ final class MainTabBarController: UITabBarController {
         )
 
         // 3. Заглушка Settings
-        let settingsVC = SimplePlaceholderViewController(
-            titleText: "Settings",
-            systemImageName: "gearshape"
-        )
-        let settingsNav = UINavigationController(rootViewController: settingsVC)
-        settingsNav.tabBarItem = UITabBarItem(
-            title: "Settings",
-            image: UIImage(systemName: "gearshape"),
-            tag: 2
-        )
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let settingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsVC") as! SettingsViewController
+                
+                let settingsNav = UINavigationController(rootViewController: settingsVC)
+                settingsNav.tabBarItem = UITabBarItem(
+                    title: "Settings",
+                    image: UIImage(systemName: "gearshape"),
+                    tag: 2
+                )
+
 
         viewControllers = [citiesNav, trendingNav, settingsNav]
     }
