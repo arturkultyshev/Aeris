@@ -124,7 +124,6 @@ final class CitiesViewController: UIViewController {
                     self.cities[index].airQuality = data
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                 case .failure:
-                    // В учебном проекте тихо игнорируем
                     break
                 }
             }
@@ -132,7 +131,6 @@ final class CitiesViewController: UIViewController {
     }
 }
 
-// MARK: - Table delegate/data source
 
 extension CitiesViewController: UITableViewDataSource, UITableViewDelegate {
 

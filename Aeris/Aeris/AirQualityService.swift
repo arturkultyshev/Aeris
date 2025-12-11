@@ -7,12 +7,10 @@
 
 import Foundation
 
-/// Сервис для работы с API AirVisual
 final class AirQualityService {
 
     static let shared = AirQualityService()
 
-    /// ВСТАВЬ СВОЙ КЛЮЧ СЮДА
     private let apiKey: String = ProcessInfo.processInfo.environment["API_KEY"] ?? ""
 
     private init() {}
@@ -30,7 +28,6 @@ final class AirQualityService {
         let data: Data
     }
 
-    /// Загружаем данные по городу
     func fetchAirQuality(for city: City, completion: @escaping (Result<AirQualityData, Error>) -> Void) {
         var components = URLComponents(string: "https://api.airvisual.com/v2/city")!
         components.queryItems = [

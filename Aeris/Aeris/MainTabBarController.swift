@@ -12,7 +12,7 @@ final class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 1. Cities
+        // MARK: - 1. Cities
         let citiesVC = CitiesViewController()
         let citiesNav = UINavigationController(rootViewController: citiesVC)
         citiesNav.tabBarItem = UITabBarItem(
@@ -21,7 +21,7 @@ final class MainTabBarController: UITabBarController {
             tag: 0
         )
 
-        // 2. Заглушка Trending
+        // MARK: - 2. Trending
         let trendingVC = SimplePlaceholderViewController(
             titleText: "Trending",
             systemImageName: "chart.line.uptrend.xyaxis"
@@ -33,23 +33,32 @@ final class MainTabBarController: UITabBarController {
             tag: 1
         )
 
-        // 3. Заглушка Settings
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let settingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsVC") as! SettingsViewController
-                
-                let settingsNav = UINavigationController(rootViewController: settingsVC)
-                settingsNav.tabBarItem = UITabBarItem(
-                    title: "Settings",
-                    image: UIImage(systemName: "gearshape"),
-                    tag: 2
-                )
+        // MARK: - 3. News (НОВАЯ ВКЛАДКА)
+        let newsStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsVC = newsStoryboard.instantiateViewController(withIdentifier: "NewsVC") as! NewsListViewController
+        let newsNav = UINavigationController(rootViewController: newsVC)
+        newsNav.tabBarItem = UITabBarItem(
+            title: "News",
+            image: UIImage(systemName: "newspaper"),
+            tag: 2
+        )
 
+        // MARK: - 4. Settings
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let settingsVC = mainStoryboard.instantiateViewController(withIdentifier: "SettingsVC") as! SettingsViewController
+        let settingsNav = UINavigationController(rootViewController: settingsVC)
+        settingsNav.tabBarItem = UITabBarItem(
+            title: "Settings",
+            image: UIImage(systemName: "gearshape"),
+            tag: 3
+        )
 
-        viewControllers = [citiesNav, trendingNav, settingsNav]
+        // MARK: - Add Tabs
+        viewControllers = [citiesNav, trendingNav, newsNav, settingsNav]
     }
 }
 
-/// Простой экран-заглушка для вкладок Trending и Settings
+/// Простой заглушочный экран
 final class SimplePlaceholderViewController: UIViewController {
 
     private let titleText: String
