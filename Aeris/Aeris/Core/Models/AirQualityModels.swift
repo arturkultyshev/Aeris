@@ -32,12 +32,13 @@ enum AirQualityMetric: Int, CaseIterable {
 }
 
 struct City {
-    let name: String        // ALMATY
-    let apiCity: String     // Almaty  (для запроса)
+    let name: String       
     let state: String
     let country: String
     let imageName: String
     let subtitle: String
+    let latitude: Double
+    let longitude: Double
 
     var airQuality: AirQualityData?
 }

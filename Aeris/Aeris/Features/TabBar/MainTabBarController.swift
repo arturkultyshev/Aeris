@@ -22,10 +22,7 @@ final class MainTabBarController: UITabBarController {
         )
 
         // MARK: - 2. Trending
-        let trendingVC = SimplePlaceholderViewController(
-            titleText: "Trending",
-            systemImageName: "chart.line.uptrend.xyaxis"
-        )
+        let trendingVC = TrendingViewController()
         let trendingNav = UINavigationController(rootViewController: trendingVC)
         trendingNav.tabBarItem = UITabBarItem(
             title: "Trending",
