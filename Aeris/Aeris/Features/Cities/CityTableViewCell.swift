@@ -86,7 +86,8 @@ final class CityTableViewCell: UITableViewCell {
             backgroundImageView.heightAnchor.constraint(equalToConstant: 160),
 
             valueContainerView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
-            valueContainerView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
+            valueContainerView.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: 24),
+            valueContainerView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -16),
             valueContainerView.widthAnchor.constraint(equalToConstant: 64),
             valueContainerView.heightAnchor.constraint(equalToConstant: 64),
 
@@ -110,10 +111,10 @@ final class CityTableViewCell: UITableViewCell {
     func configure(with city: City, metric: AirQualityMetric) {
         backgroundImageView.image = UIImage(named: city.imageName)
         cityNameLabel.text = city.name
-        subtitleLabel.text = city.subtitle
 
         guard let air = city.airQuality else {
             valueLabel.text = "--"
+            subtitleLabel.text = "Loading..."
             valueContainerView.backgroundColor = .systemGray4
             statusButton.setTitle("Loading…", for: .normal)
             statusButton.backgroundColor = .systemGray4
@@ -125,8 +126,16 @@ final class CityTableViewCell: UITableViewCell {
 
         valueLabel.text = "\(value)"
         valueContainerView.backgroundColor = category.color
+
         statusButton.setTitle(category.title, for: .normal)
         statusButton.backgroundColor = category.color
+
+        // 🔥 ДИНАМИЧЕСКИЙ SUBTITLE
+        // Короткая фраза под названием города
+        subtitleLabel.text = category.shortDescription
+        // Если хочешь чуть длиннее текст — можешь использовать:
+        // subtitleLabel.text = category.advice
     }
+
 }
 

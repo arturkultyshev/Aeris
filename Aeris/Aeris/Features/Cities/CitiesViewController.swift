@@ -14,32 +14,10 @@ final class CitiesViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .plain)
     
 
-    private var cities: [City] = [
-        City(
-            name: "ALMATY",
-            apiCity: "Almaty",
-            state: "Almaty Oblysy",
-            country: "Kazakhstan",
-            imageName: "almaty",         // добавь такие картинки в Assets
-            subtitle: "sensitive groups should limit outdoor activity"
-        ),
-        City(
-            name: "ASTANA",
-            apiCity: "Astana",
-            state: "Astana",
-            country: "Kazakhstan",
-            imageName: "astana",
-            subtitle: "sensitive groups should limit outdoor activity"
-        ),
-        City(
-            name: "AQTOBE",
-            apiCity: "Aqtobe",
-            state: "Aqtoebe",
-            country: "Kazakhstan",
-            imageName: "aqtobe",
-            subtitle: "mask recommended"
-        )
-    ]
+    var cities: [City] {
+        CityStore.shared.cities
+    }
+
 
     private var currentMetric: AirQualityMetric = .pm25 {
         didSet {
@@ -49,15 +27,24 @@ final class CitiesViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Cities"
         view.backgroundColor = UIColor.systemGray6
 
         setupMetricsHeader()
         setupTableView()
-        
 
         metricSegmentedControl.selectedSegmentIndex = currentMetric.rawValue
 
-        loadData()
+        // Подписываемся на обновления стора
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleCityStoreUpdate),
+            name: .cityStoreDidUpdate,
+            object: nil
+        )
+
+        // Стартуем загрузку метрик (один раз, но благодаря кэшу — ок)
+        CityStore.shared.refreshAll()
     }
 
     private func setupMetricsHeader() {
@@ -114,21 +101,11 @@ final class CitiesViewController: UIViewController {
         guard let metric = AirQualityMetric(rawValue: metricSegmentedControl.selectedSegmentIndex) else { return }
         currentMetric = metric
     }
-
-    private func loadData() {
-        for (index, city) in cities.enumerated() {
-            AirQualityService.shared.fetchAirQuality(for: city) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let data):
-                    self.cities[index].airQuality = data
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                case .failure:
-                    break
-                }
-            }
-        }
+    
+    @objc private func handleCityStoreUpdate() {
+        tableView.reloadData()
     }
+
 }
 
 
