@@ -14,31 +14,33 @@ final class NewsAPIService {
     private let apiKey = "pub_2a365b60aa8647f08c763c1649dabe63"
     
     func fetchNews(completion: @escaping (Result<[NewsArticle], Error>) -> Void) {
-        let urlString = "\(baseURL)?apikey=\(apiKey)&q=air&language=en&category=environment"
 
-        
-        guard let url = URL(string: urlString) else {
-            completion(.failure(NSError(domain: "InvalidURL", code: -1)))
-            return
+            var components = URLComponents(string: baseURL)
+            components?.queryItems = [
+                URLQueryItem(name: "apikey", value: apiKey),
+                //URLQueryItem(name: "country", value: "kz"),
+                URLQueryItem(name: "q", value: "air pollution"),
+                URLQueryItem(name: "language", value: "en,ru,kz"),
+            ]
+
+            guard let url = components?.url else { return }
+
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let data else { return }
+
+                do {
+                    let decoded = try JSONDecoder().decode(NewsResponse.self, from: data)
+                    completion(.success(decoded.results))
+                } catch {
+                    completion(.failure(error))
+                }
+            }.resume()
         }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            guard let data = data else {
-                completion(.failure(NSError(domain: "NoData", code: -1)))
-                return
-            }
-            do {
-                let decoded = try JSONDecoder().decode(NewsResponse.self, from: data)
-                completion(.success(decoded.results))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
-    }
     
 }
 
