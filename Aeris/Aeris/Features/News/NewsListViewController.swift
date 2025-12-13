@@ -24,8 +24,6 @@ final class NewsListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        //let nib = UINib(nibName: "NewsTableViewCell", bundle: nil)
-       // tableView.register(nib, forCellReuseIdentifier: "NewsCell")
     }
 
     private func fetchNews() {
@@ -33,18 +31,26 @@ final class NewsListViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let list):
-                    // Фильтруем статьи с заголовком и картинкой
-                    let filtered = list.filter { $0.title != nil && $0.image_url != nil }
-                    // Убираем дубликаты по заголовку (например)
-                    let uniqueArticles = Array(Dictionary(grouping: filtered, by: { $0.title! }).compactMap { $0.value.first })
-                    self?.articles = uniqueArticles
+                    let filtered = list.filter {
+                        $0.title != nil &&
+                        $0.image_url != nil &&
+                        $0.description != nil
+                    }
+
+                    self?.articles = Array(
+                        Dictionary(grouping: filtered, by: { $0.title! })
+                            .compactMap { $0.value.first }
+                    )
+
                     self?.tableView.reloadData()
+
                 case .failure(let error):
-                    print("Error:", error)
+                    print("News error:", error)
                 }
             }
         }
     }
+
 
 }
 

@@ -12,14 +12,12 @@ final class CitiesViewController: UIViewController {
     private let metricsContainerView = UIView()
     private let metricSegmentedControl = UISegmentedControl(items: AirQualityMetric.allCases.map { $0.title })
     private let tableView = UITableView(frame: .zero, style: .plain)
-    
 
     var cities: [City] {
         CityStore.shared.cities
     }
 
-
-    private var currentMetric: AirQualityMetric = .pm25 {
+    private var currentMetric: AirQualityMetric = SettingsManager.shared.defaultMetric {
         didSet {
             tableView.reloadData()
         }
@@ -28,14 +26,21 @@ final class CitiesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Cities"
-        view.backgroundColor = UIColor.systemGray6
+        view.backgroundColor = .systemGray6
 
         setupMetricsHeader()
         setupTableView()
 
+        currentMetric = SettingsManager.shared.defaultMetric
         metricSegmentedControl.selectedSegmentIndex = currentMetric.rawValue
 
-        // Подписываемся на обновления стора
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(defaultMetricDidChange),
+            name: .didChangeDefaultMetric,
+            object: nil
+        )
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleCityStoreUpdate),
@@ -43,18 +48,21 @@ final class CitiesViewController: UIViewController {
             object: nil
         )
 
-        // Стартуем загрузку метрик (один раз, но благодаря кэшу — ок)
         CityStore.shared.refreshAll()
+    }
+
+    @objc private func defaultMetricDidChange() {
+        let metric = SettingsManager.shared.defaultMetric
+        currentMetric = metric
+        metricSegmentedControl.selectedSegmentIndex = metric.rawValue
     }
 
     private func setupMetricsHeader() {
         metricsContainerView.translatesAutoresizingMaskIntoConstraints = false
-        metricsContainerView.backgroundColor = UIColor.systemGray6
         metricsContainerView.layer.cornerRadius = 24
+        metricsContainerView.backgroundColor = .systemGray6
 
         metricSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        metricSegmentedControl.selectedSegmentTintColor = .white
-        metricSegmentedControl.backgroundColor = UIColor.systemGray6
         metricSegmentedControl.addTarget(self, action: #selector(metricChanged), for: .valueChanged)
 
         view.addSubview(metricsContainerView)
@@ -76,7 +84,6 @@ final class CitiesViewController: UIViewController {
 
     private func setupTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.rowHeight = 260
         tableView.dataSource = self
@@ -90,48 +97,29 @@ final class CitiesViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: metricsContainerView.bottomAnchor, constant: 16),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safe.bottomAnchor)   // <- главное изменение
+            tableView.bottomAnchor.constraint(equalTo: safe.bottomAnchor)
         ])
     }
-
-
-    
 
     @objc private func metricChanged() {
         guard let metric = AirQualityMetric(rawValue: metricSegmentedControl.selectedSegmentIndex) else { return }
         currentMetric = metric
     }
-    
+
     @objc private func handleCityStoreUpdate() {
         tableView.reloadData()
     }
-
 }
-
 
 extension CitiesViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities.count
+        cities.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CityTableViewCell.reuseId, for: indexPath) as? CityTableViewCell else {
-            return UITableViewCell()
-        }
-
-        let city = cities[indexPath.row]
-        cell.configure(with: city, metric: currentMetric)
+        let cell = tableView.dequeueReusableCell(withIdentifier: CityTableViewCell.reuseId, for: indexPath) as! CityTableViewCell
+        cell.configure(with: cities[indexPath.row], metric: currentMetric)
         return cell
     }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = cities[indexPath.row]
-        guard let air = city.airQuality else { return }
-
-        let detailVC = CityDetailViewController(city: city, airQuality: air, metric: currentMetric)
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
 }
-

@@ -15,26 +15,24 @@ final class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var subtitleLabel: UILabel!
 
     override func awakeFromNib() {
-        super.awakeFromNib()
-        newsImageView.layer.cornerRadius = 10
-        newsImageView.clipsToBounds = true
-        newsImageView.layer.borderWidth = 1
-        newsImageView.layer.borderColor = UIColor.lightGray.cgColor
-        newsImageView.layer.masksToBounds = true
-
-    }
-
-    func configure(with article: NewsArticle) {
-        titleLabel.text = article.title
-        subtitleLabel.text = "By \(article.source_id ?? "Unknown") • \(article.pubDate ?? "")"
-
-        if let urlString = article.image_url,
-           let url = URL(string: urlString) {
-            newsImageView.kf.setImage(with: url)
-        } else {
-            newsImageView.image = UIImage(named: "placeholder")
+            super.awakeFromNib()
+            newsImageView.layer.cornerRadius = 10
+            newsImageView.clipsToBounds = true
         }
-    }
+
+        func configure(with article: NewsArticle) {
+            titleLabel.text = article.title
+
+            let source = article.source_id ?? "Source"
+            let time = article.pubDate?.timeAgo() ?? ""
+            subtitleLabel.text = "\(source) • \(time)"
+
+            if let link = article.image_url, let url = URL(string: link) {
+                newsImageView.kf.setImage(with: url)
+            } else {
+                newsImageView.image = UIImage(named: "placeholder")
+            }
+        }
 }
 
 
