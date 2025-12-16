@@ -10,37 +10,39 @@ import Foundation
 final class NewsAPIService {
     static let shared = NewsAPIService()
     
-    private let baseURL = "https://newsdata.io/api/1/latest"
-    private let apiKey = "pub_2a365b60aa8647f08c763c1649dabe63"
+    private let baseURL = URL(string: "https://air-api-8lb9.onrender.com/news/air-pollution")!
     
-    func fetchNews(completion: @escaping (Result<[NewsArticle], Error>) -> Void) {
-
-            var components = URLComponents(string: baseURL)
-            components?.queryItems = [
-                URLQueryItem(name: "apikey", value: apiKey),
-                //URLQueryItem(name: "country", value: "kz"),
-                URLQueryItem(name: "q", value: "air pollution"),
-                URLQueryItem(name: "language", value: "en,ru,kz"),
-            ]
-
-            guard let url = components?.url else { return }
-
-            URLSession.shared.dataTask(with: url) { data, _, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                guard let data else { return }
-
-                do {
-                    let decoded = try JSONDecoder().decode(NewsResponse.self, from: data)
-                    completion(.success(decoded.results))
-                } catch {
+    func fetchNews(limit: Int = 20,
+                   completion: @escaping (Result<[NewsArticle], Error>) -> Void) {
+        
+        var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
+        components.queryItems = [
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
+        
+        guard let url = components.url else { return }
+        
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                DispatchQueue.main.async {
                     completion(.failure(error))
                 }
-            }.resume()
-        }
-    
+                return
+            }
+            
+            guard let data = data else { return }
+            
+            do {
+                let decoder = JSONDecoder()
+                let response = try decoder.decode(NewsResponse.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(response.results))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }.resume()
+    }
 }
-
