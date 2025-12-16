@@ -31,17 +31,12 @@ final class NewsListViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let list):
-                    let filtered = list.filter {
-                        $0.title != nil &&
-                        $0.image_url != nil &&
-                        $0.description != nil
-                    }
+                    print("Loaded articles:", list.count)
 
-                    self?.articles = Array(
-                        Dictionary(grouping: filtered, by: { $0.title! })
-                            .compactMap { $0.value.first }
-                    )
+                    // если хочешь, можешь оставить только проверку title
+                    let filtered = list.filter { $0.title != nil }
 
+                    self?.articles = filtered
                     self?.tableView.reloadData()
 
                 case .failure(let error):
@@ -50,6 +45,7 @@ final class NewsListViewController: UIViewController {
             }
         }
     }
+
 
 
 }
