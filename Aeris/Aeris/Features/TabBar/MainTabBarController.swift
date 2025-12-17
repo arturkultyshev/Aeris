@@ -12,7 +12,6 @@ final class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // MARK: - 1. Cities
         let citiesVC = CitiesViewController()
         let citiesNav = UINavigationController(rootViewController: citiesVC)
         citiesNav.tabBarItem = UITabBarItem(
@@ -21,7 +20,6 @@ final class MainTabBarController: UITabBarController {
             tag: 0
         )
 
-        // MARK: - 2. Trending
         let trendingVC = TrendingViewController()
         let trendingNav = UINavigationController(rootViewController: trendingVC)
         trendingNav.tabBarItem = UITabBarItem(
@@ -30,7 +28,6 @@ final class MainTabBarController: UITabBarController {
             tag: 1
         )
 
-        // MARK: - 3. News (НОВАЯ ВКЛАДКА)
         let newsStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let newsVC = newsStoryboard.instantiateViewController(withIdentifier: "NewsVC") as! NewsListViewController
         let newsNav = UINavigationController(rootViewController: newsVC)
@@ -40,7 +37,6 @@ final class MainTabBarController: UITabBarController {
             tag: 2
         )
 
-        // MARK: - 4. Settings
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let settingsVC = mainStoryboard.instantiateViewController(withIdentifier: "SettingsVC") as! SettingsViewController
         let settingsNav = UINavigationController(rootViewController: settingsVC)
@@ -50,12 +46,10 @@ final class MainTabBarController: UITabBarController {
             tag: 3
         )
 
-        // MARK: - Add Tabs
         viewControllers = [citiesNav, trendingNav, newsNav, settingsNav]
     }
 }
 
-/// Простой заглушочный экран
 final class SimplePlaceholderViewController: UIViewController {
 
     private let titleText: String

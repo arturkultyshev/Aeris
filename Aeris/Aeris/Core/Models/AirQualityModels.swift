@@ -63,7 +63,6 @@ struct AirQualityData {
     }
 }
 
-/// Категория качества воздуха + цвет + текст
 struct AirQualityCategory {
     let title: String
     let color: UIColor

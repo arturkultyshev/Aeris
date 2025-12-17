@@ -12,7 +12,6 @@ extension String {
     func timeAgo() -> String {
         let now = Date()
         
-        // Возможные форматы pubDate
         let formats: [(format: String, locale: Locale?)] = [
             ("yyyy-MM-dd'T'HH:mm:ssXXXXX", Locale(identifier: "en_US_POSIX")),
             ("yyyy-MM-dd'T'HH:mm:ssZ",     Locale(identifier: "en_US_POSIX")),
@@ -25,7 +24,7 @@ extension String {
         for (fmt, locale) in formats {
             let formatter = DateFormatter()
             formatter.dateFormat = fmt
-            formatter.timeZone = TimeZone(secondsFromGMT: 0) // или свой, если нужно
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
             if let locale = locale {
                 formatter.locale = locale
             }
@@ -36,7 +35,7 @@ extension String {
         }
         
         guard let date = parsedDate else {
-            return ""   // не смогли распарсить
+            return "" 
         }
         
         let seconds = Int(now.timeIntervalSince(date))

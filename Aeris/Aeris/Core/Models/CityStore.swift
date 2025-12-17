@@ -7,17 +7,14 @@
 
 import Foundation
 
-/// Уведомление, что данные по городам обновились
 extension Notification.Name {
     static let cityStoreDidUpdate = Notification.Name("cityStoreDidUpdate")
 }
 
-/// Общий стор с городами и их метриками
 final class CityStore {
 
     static let shared = CityStore()
 
-    /// Все города приложения (один источник правды)
     var cities: [City] = [
 
         City(
@@ -298,8 +295,6 @@ final class CityStore {
 
     private init() {}
 
-    /// Загрузить/обновить метрики для всех городов.
-    /// Благодаря кэшу в AirQualityService сетевые запросы будут только один раз.
     func refreshAll() {
         for (index, city) in cities.enumerated() {
             AirQualityService.shared.fetchAirQuality(for: city) { [weak self] result in
@@ -309,14 +304,12 @@ final class CityStore {
                 case .success(let data):
                     self.cities[index].airQuality = data
 
-                    // сообщаем всем контроллерам, что данные обновились
                     NotificationCenter.default.post(
                         name: .cityStoreDidUpdate,
                         object: nil
                     )
 
                 case .failure:
-                    // в учебном проекте можно просто игнорировать
                     break
                 }
             }

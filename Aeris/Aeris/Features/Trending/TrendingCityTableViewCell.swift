@@ -86,7 +86,6 @@ final class TrendingCityTableViewCell: UITableViewCell {
         ])
     }
 
-    // Один кружочек под метрику
     private func makeMetricChip(valueText: String,
                                 color: UIColor,
                                 isHighlighted: Bool) -> UIView {
@@ -131,7 +130,6 @@ final class TrendingCityTableViewCell: UITableViewCell {
         }
 
         guard let air = city.airQuality else {
-            // Плашки пустые, если данных нет
             for _ in AirQualityMetric.allCases {
                 let chip = makeMetricChip(valueText: "--",
                                           color: .systemGray4,

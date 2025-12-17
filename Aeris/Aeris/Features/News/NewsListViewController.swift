@@ -33,7 +33,6 @@ final class NewsListViewController: UIViewController {
                 case .success(let list):
                     print("Loaded articles:", list.count)
 
-                    // если хочешь, можешь оставить только проверку title
                     let filtered = list.filter { $0.title != nil }
 
                     self?.articles = filtered
