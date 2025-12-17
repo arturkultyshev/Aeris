@@ -52,22 +52,16 @@ private extension OnboardingContentViewController {
     }
     
     func setupStyles() {
-        // Текст по центру (если это не в сториборде)
         titleLabel.textAlignment = .center
         descLabel.textAlignment = .center
         
         titleLabel.numberOfLines = 0
         descLabel.numberOfLines = 0
-        // Жирный заголовок
-        //titleLabel.font = UIFont.boldSystemFont(ofSize: 26)
-        //descLabel.font = UIFont.systemFont(ofSize: 16)
+
         
-        // Кнопка
         primaryButton.layer.cornerRadius = 8
         primaryButton.clipsToBounds = true
-        //primaryButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
-        // Градиент кнопки
         gradientLayer.colors = [
             UIColor(red: 0.11, green: 0.53, blue: 0.98, alpha: 1).cgColor,
             UIColor(red: 0.06, green: 0.45, blue: 0.95, alpha: 1).cgColor

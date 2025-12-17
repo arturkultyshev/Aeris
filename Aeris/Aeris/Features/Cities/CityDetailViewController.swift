@@ -13,7 +13,7 @@ final class CityDetailViewController: UIViewController {
     private let airQuality: AirQualityData
     private var currentMetric: AirQualityMetric
 
-    // UI
+
     private let metricsContainerView = UIView()
     private let metricSegmentedControl = UISegmentedControl(items: AirQualityMetric.allCases.map { $0.title })
 
@@ -202,7 +202,6 @@ final class CityDetailViewController: UIViewController {
         
         let safe = view.safeAreaLayoutGuide
             NSLayoutConstraint.activate([
-                // существующие констрейнты
                 adviceCardView.topAnchor.constraint(equalTo: metricsBlockView.bottomAnchor, constant: 16),
                 adviceCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                 adviceCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -238,7 +237,6 @@ final class CityDetailViewController: UIViewController {
     }
 
     private func updateMetricsBlock() {
-        // Упростим: покажем четыре маленьких карточки с числами.
         metricsBlockView.subviews.forEach { $0.removeFromSuperview() }
 
         let titleLabel = UILabel()

@@ -130,11 +130,8 @@ final class CityTableViewCell: UITableViewCell {
         statusButton.setTitle(category.title, for: .normal)
         statusButton.backgroundColor = category.color
 
-        // 🔥 ДИНАМИЧЕСКИЙ SUBTITLE
-        // Короткая фраза под названием города
         subtitleLabel.text = category.shortDescription
-        // Если хочешь чуть длиннее текст — можешь использовать:
-        // subtitleLabel.text = category.advice
+
     }
 
 }

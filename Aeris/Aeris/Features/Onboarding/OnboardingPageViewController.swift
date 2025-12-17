@@ -45,7 +45,6 @@ class OnboardingPageViewController: UIPageViewController {
             setViewControllers([first], direction: .forward, animated: false, completion: nil)
         }
 
-        // PageControl
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +54,6 @@ class OnboardingPageViewController: UIPageViewController {
             pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -120)
         ])
 
-        // Skip button
         let skip = UIButton(type: .system)
         skip.setTitle("Skip", for: .normal)
         skip.addTarget(self, action: #selector(skipTapped), for: .touchUpInside)
@@ -83,7 +81,6 @@ class OnboardingPageViewController: UIPageViewController {
 
 
     func finishOnboarding() {
-        // Переход в основной экран (пример с модальным переходом)
         let tabBar = MainTabBarController()
         tabBar.modalPresentationStyle = .fullScreen
         present(tabBar, animated: true, completion: nil)

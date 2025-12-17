@@ -11,22 +11,17 @@ final class AirQualityService {
     
     static let shared = AirQualityService()
     
-    /// Ключ берём из схемы / .env
     private let apiKey: String = ProcessInfo.processInfo.environment["API_KEY"] ?? ""
     
-    /// Кэш: ключ -> данные по качеству воздуха
     private var cache: [String: AirQualityData] = [:]
     
     private init() {}
     
-    // MARK: - Вспомогательное: ключ кэша
     
-    /// Используем координаты, чтобы не зависеть от названия города
     private func cacheKey(for city: City) -> String {
         return "\(city.latitude)_\(city.longitude)"
     }
     
-    // MARK: - Модели под OpenWeather
     
     private struct OpenWeatherResponse: Decodable {
         struct Item: Decodable {
@@ -45,11 +40,9 @@ final class AirQualityService {
         let list: [Item]
     }
     
-    // MARK: - Публичный метод
     
     func fetchAirQuality(for city: City,
                          completion: @escaping (Result<AirQualityData, Error>) -> Void) {
-        // 1. Проверяем кэш
         let key = cacheKey(for: city)
         if let cached = cache[key] {
             DispatchQueue.main.async {
@@ -58,7 +51,6 @@ final class AirQualityService {
             return
         }
         
-        // 2. Если в кэше нет — идём в сеть (OpenWeather)
         guard !apiKey.isEmpty else {
             DispatchQueue.main.async {
                 let err = NSError(
@@ -128,15 +120,13 @@ final class AirQualityService {
                     return
                 }
                 
-                // Конвертация в нашу модель
                 let pm25 = Int(first.components.pm2_5.rounded())
                 let pm10 = Int(first.components.pm10.rounded())
-                let co   = Int(first.components.co.rounded())   // используем как "CO2"
+                let co   = Int(first.components.co.rounded())  
                 let o3   = Int(first.components.o3.rounded())
                 
                 let result = AirQualityData(pm25: pm25, pm10: pm10, co2: co, o3: o3)
                 
-                // 3. Сохраняем в кэш
                 self.cache[key] = result
                 
                 DispatchQueue.main.async {

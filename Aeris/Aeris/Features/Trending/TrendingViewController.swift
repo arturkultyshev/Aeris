@@ -9,7 +9,6 @@ import UIKit
 
 final class TrendingViewController: UIViewController {
 
-    // MARK: - UI
 
     private let metricsContainerView = UIView()
     private let metricSegmentedControl =
@@ -25,15 +24,12 @@ final class TrendingViewController: UIViewController {
 
     private let tableView = UITableView(frame: .zero, style: .plain)
 
-    // MARK: - State
 
     private var currentMetric: AirQualityMetric = .pm25
     private var showBest: Bool = true
 
-    /// Отсортированные города для таблицы
     private var sortedCities: [City] = []
 
-    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,11 +42,9 @@ final class TrendingViewController: UIViewController {
         setupModeControl()
         setupTableView()
 
-        // выбранная метрика
         metricSegmentedControl.selectedSegmentIndex = currentMetric.rawValue
         modeSegmentedControl.selectedSegmentIndex = 0
 
-        // слушаем обновления от CityStore
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleCityStoreUpdate),
@@ -58,7 +52,6 @@ final class TrendingViewController: UIViewController {
             object: nil
         )
 
-        // запрашиваем данные (AirQualityService сам использует кэш)
         CityStore.shared.refreshAll()
 
         reloadFromStore()
@@ -68,7 +61,6 @@ final class TrendingViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    // MARK: - Setup UI
 
     private func setupMetricsHeader() {
         metricsContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -138,7 +130,7 @@ final class TrendingViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
-        button.isUserInteractionEnabled = false   // это просто отображение
+        button.isUserInteractionEnabled = false  
     }
 
     private func setupModeControl() {
@@ -179,7 +171,6 @@ final class TrendingViewController: UIViewController {
         ])
     }
 
-    // MARK: - Data
 
     @objc private func handleCityStoreUpdate() {
         reloadFromStore()
@@ -188,7 +179,6 @@ final class TrendingViewController: UIViewController {
     private func reloadFromStore() {
         let all = CityStore.shared.cities
 
-        // берём только те, у кого уже есть данные
         let withData: [(City, Int)] = all.compactMap { city in
             guard let aq = city.airQuality else { return nil }
             return (city, aq.value(for: currentMetric))
@@ -201,7 +191,6 @@ final class TrendingViewController: UIViewController {
             return
         }
 
-        // сортировка по возрастанию AQI
         let sortedAsc = withData.sorted { $0.1 < $1.1 }
         let best = sortedAsc.first
         let worst = sortedAsc.last
@@ -232,7 +221,6 @@ final class TrendingViewController: UIViewController {
         }
     }
 
-    // MARK: - Actions
 
     @objc private func metricChanged() {
         guard let metric = AirQualityMetric(rawValue: metricSegmentedControl.selectedSegmentIndex) else { return }
@@ -246,7 +234,6 @@ final class TrendingViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDataSource & Delegate
 
 extension TrendingViewController: UITableViewDataSource, UITableViewDelegate {
 
