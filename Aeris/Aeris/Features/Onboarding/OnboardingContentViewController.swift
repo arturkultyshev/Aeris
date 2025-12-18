@@ -76,7 +76,7 @@ private extension OnboardingContentViewController {
     
     func animateAppearance() {
         view.alpha = 0
-        UIView.animate(withDuration: 0.35, animations: {
+        UIView.animate(withDuration: 1.35, animations: {
             self.view.alpha = 1
         })
     }

@@ -122,4 +122,12 @@ extension CitiesViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(with: cities[indexPath.row], metric: currentMetric)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let city = cities[indexPath.row]
+            guard let air = city.airQuality else { return }
+
+            let detailVC = CityDetailViewController(city: city, airQuality: air, metric: currentMetric)
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
 }

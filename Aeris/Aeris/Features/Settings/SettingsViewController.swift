@@ -116,7 +116,17 @@ class SettingsViewController: UIViewController {
     }
 
     @IBAction func clearCacheTapped(_ sender: UIButton) {
-        SettingsManager.shared.clearCache()
+        let alert = UIAlertController(title: "Clear cache?", message: "This will remove cached API data.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                alert.addAction(UIAlertAction(title: "Clear", style: .destructive) { _ in
+                    SettingsManager.shared.clearCache()
+                    
+                    let ok = UIAlertController(title: nil, message: "Cache cleared", preferredStyle: .alert)
+                    self.present(ok, animated: true) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { ok.dismiss(animated: true) }
+                    }
+                })
+                present(alert, animated: true)
     }
 }
 
