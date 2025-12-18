@@ -52,7 +52,7 @@ final class CityTableViewCell: UITableViewCell {
         valueLabel.textAlignment = .center
 
         cityNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        cityNameLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        cityNameLabel.font = UIFont.boldSystemFont(ofSize: 15)
 
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.font = UIFont.systemFont(ofSize: 11)
