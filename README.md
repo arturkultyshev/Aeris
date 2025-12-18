@@ -32,7 +32,7 @@
 <div align="center">
   <img src="Aeris/Aeris/Resources/Screenshots/main_screen.png" width="220" alt="Main Screen"/>
   <img src="Aeris/Aeris/Resources/Screenshots/main_detailed.png" width="220" alt="Main Detailed"/>
-  <img src="Aeris/Aeris/Resources/Screenshots/trending" width="220" alt="Trending"/>
+  <img src="Aeris/Aeris/Resources/Screenshots/trending.png" width="220" alt="Trending"/>
   <img src="Aeris/Aeris/Resources/Screenshots/news.png" width="220" alt="News"/>
 </div>
 
